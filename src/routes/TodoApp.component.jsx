@@ -76,11 +76,12 @@ const TodoItem = ({
 };
 
 const TodoApp = () => {
-  const [todoList, setTodoList] = useState([
-    { id: "01", task: "Learn Html", completed: false, editable: false },
-    { id: "02", task: "Learn Css", completed: false, editable: false },
-    { id: "03", task: "Learn JavaScript", completed: false, editable: false },
-  ]);
+  const [todoList, setTodoList] = useState([]);
+
+  useEffect(() => {
+    const localTodoList = JSON.parse(localStorage.getItem("todoList"));
+    setTodoList(localTodoList);
+  }, []);
 
   const addNewTask = (e) => {
     if (e.key === "Enter") {
@@ -91,6 +92,7 @@ const TodoApp = () => {
         editable: false,
       };
       setTodoList([...todoList, newTodo]);
+      localStorage.setItem("todoList", JSON.stringify([...todoList, newTodo]));
       e.target.value = "";
     }
   };
@@ -103,25 +105,30 @@ const TodoApp = () => {
       return todo;
     });
     setTodoList(completedTodo);
+    localStorage.todoList = JSON.stringify(completedTodo);
   };
 
   const deleteTask = (id) => {
-    console.log("deleted", id);
     const updatedTodoList = todoList.filter((todo) => todo.id !== id);
     setTodoList(updatedTodoList);
+    localStorage.todoList = JSON.stringify(updatedTodoList);
   };
 
   return (
     <div>
       <h2>My Tasks</h2>
-      {todoList.map((todo) => (
-        <TodoItem
-          key={todo.id}
-          todo={todo}
-          completeTaskHandler={completeTask}
-          deleteTaskHandler={deleteTask}
-        />
-      ))}
+      {todoList.length > 0 ? (
+        todoList.map((todo) => (
+          <TodoItem
+            key={todo.id}
+            todo={todo}
+            completeTaskHandler={completeTask}
+            deleteTaskHandler={deleteTask}
+          />
+        ))
+      ) : (
+        <p>No tasks yet</p>
+      )}
       <TaskInputContainer addNewTaskHandler={addNewTask} />
     </div>
   );
