@@ -64,7 +64,8 @@ const EditableInput = styled.input.attrs({ type: "text" })`
   font-size: 16px;
 `;
 
-const TodoItem = ({ todo: { id, task, completed, editable } }) => {
+const TodoItem = ({ todo }) => {
+  const { id, task, completed, editable } = todo;
   const { makeTaskEditable, editTask, updateTask, completeTask, deleteTask } =
     useTodoContext();
 
