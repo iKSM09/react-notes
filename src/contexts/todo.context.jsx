@@ -1,6 +1,6 @@
 import { useState, useEffect, createContext, useContext } from "react";
 
-export const TodoContext = createContext([]);
+export const TodoContext = createContext();
 
 const TodoProvider = ({ children }) => {
   const [todoList, setTodoList] = useState([]);
