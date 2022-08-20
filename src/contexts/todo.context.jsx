@@ -9,10 +9,10 @@ const TodoProvider = ({ children }) => {
     { id: "003", task: "Learn JavaScript", completed: false, editable: false },
   ]);
 
-  //   useEffect(() => {
-  //     const localTodoList = JSON.parse(localStorage.getItem("todoList"));
-  //     setTodoList(localTodoList);
-  //   }, []);
+  useEffect(() => {
+    const localTodoList = JSON.parse(localStorage.getItem("todoList"));
+    setTodoList(localTodoList);
+  }, []);
 
   const addNewTask = (e) => {
     if (e.key === "Enter") {
