@@ -103,7 +103,7 @@ const TodoApp = () => {
   return (
     <div>
       <h2>My Tasks</h2>
-      {todoList.length > 0 ? (
+      {todoList && todoList.length > 0 ? (
         todoList.map((todo) => <TodoItem key={todo.id} todo={todo} />)
       ) : (
         <p>No tasks yet</p>
