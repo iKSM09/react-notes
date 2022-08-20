@@ -9,7 +9,7 @@ import "./global.styles.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <BrowserRouter basename="react-notes">
+    <BrowserRouter>
       <TodoProvider>
         <App />
       </TodoProvider>
