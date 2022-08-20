@@ -4,9 +4,15 @@ export const TodoContext = createContext();
 
 const TodoProvider = ({ children }) => {
   const [todoList, setTodoList] = useState([
-    { id: "001", task: "Learn Html", completed: false, editable: false },
-    { id: "002", task: "Learn Css", completed: false, editable: false },
-    { id: "003", task: "Learn JavaScript", completed: false, editable: false },
+    { id: "001", task: "Add Task", completed: false, editable: false },
+    {
+      id: "002",
+      task: "Edit task by clickin on it",
+      completed: false,
+      editable: false,
+    },
+    { id: "003", task: "Complete Task", completed: true, editable: false },
+    { id: "004", task: "Delete Task 👉", completed: false, editable: false },
   ]);
 
   useEffect(() => {
