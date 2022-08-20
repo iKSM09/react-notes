@@ -16,12 +16,15 @@ const TodoProvider = ({ children }) => {
   ]);
 
   useEffect(() => {
+    // if (localStorage.getItem("todoList") == null) {
     const localTodoList = JSON.parse(localStorage.getItem("todoList"));
     setTodoList(localTodoList);
+    // }
   }, []);
 
   const addNewTask = (e) => {
-    if (e.key === "Enter") {
+    console.log(alert(e.key));
+    if (e.key === "Enter" || e.key === "Return") {
       const newTodo = {
         id: new Date().getTime().toString(),
         task: e.target.value,
