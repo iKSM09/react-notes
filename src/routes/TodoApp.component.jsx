@@ -31,7 +31,7 @@ const TaskInputContainer = () => {
   return (
     <InputContainer>
       <MdAddBox style={{ fontSize: "22px", margin: "4px" }} />
-      <TaskInput placeholder="Add a Task" onKeyDown={addNewTask} />
+      <TaskInput placeholder="Add a Task" onKeyDown={addNewTask} tabIndex={0} />
     </InputContainer>
   );
 };
