@@ -3,7 +3,11 @@ import { useState, useEffect, createContext, useContext } from "react";
 export const TodoContext = createContext();
 
 const TodoProvider = ({ children }) => {
-  const [todoList, setTodoList] = useState([]);
+  const [todoList, setTodoList] = useState([
+    { id: "001", task: "Learn Html", completed: false, editable: false },
+    { id: "002", task: "Learn Css", completed: false, editable: false },
+    { id: "003", task: "Learn JavaScript", completed: false, editable: false },
+  ]);
 
   useEffect(() => {
     const localTodoList = JSON.parse(localStorage.getItem("todoList"));
