@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   MdAddBox,
   MdAddCircleOutline,
@@ -51,15 +51,27 @@ const Task = styled.p`
   text-decoration: ${({ completed }) => (completed ? "line-through" : "none")};
 `;
 
+const EditableInput = styled.input.attrs({ type: "text" })`
+  width: auto;
+  border: none;
+  outline: none;
+  background: transparent;
+  border-bottom: 1px solid gray;
+  font-size: 16px;
+`;
+
 const TodoItem = ({
   todo: { id, task, completed, editable },
-  completeTaskHandler,
-  deleteTaskHandler,
+  makeTaskEditable,
+  editTask,
+  updateTask,
+  completeTask,
+  deleteTask,
 }) => {
   return (
     <TodoContainer>
       <TaskWrapper>
-        <span onClick={() => completeTaskHandler(id)}>
+        <span onClick={() => completeTask(id)}>
           {completed ? (
             <MdTaskAlt style={{ fontSize: "18px", margin: "6px" }} />
           ) : (
@@ -68,9 +80,19 @@ const TodoItem = ({
             />
           )}
         </span>
-        <Task completed={completed}>{task}</Task>
+        {editable ? (
+          <EditableInput
+            value={task}
+            onChange={(e) => editTask(e, id)}
+            onKeyDown={(e) => updateTask(e, id)}
+          />
+        ) : (
+          <Task completed={completed} onClick={() => makeTaskEditable(id)}>
+            {task}
+          </Task>
+        )}
       </TaskWrapper>
-      <MdDelete onClick={() => deleteTaskHandler(id)} />
+      <MdDelete onClick={() => deleteTask(id)} />
     </TodoContainer>
   );
 };
@@ -94,6 +116,43 @@ const TodoApp = () => {
       setTodoList([...todoList, newTodo]);
       localStorage.setItem("todoList", JSON.stringify([...todoList, newTodo]));
       e.target.value = "";
+    }
+  };
+
+  const makeTaskEditable = (id) => {
+    const editableTask = todoList.map((todo) => {
+      if (todo.id === id) {
+        return { ...todo, editable: true };
+      }
+      return todo;
+    });
+
+    setTodoList(editableTask);
+  };
+
+  const editTask = (e, id) => {
+    let editingTask = todoList.map((todo) => {
+      if (todo.id === id) {
+        return { ...todo, task: e.target.value };
+      }
+
+      return todo;
+    });
+
+    setTodoList(editingTask);
+  };
+
+  const updateTask = (e, id) => {
+    if (e.key === "Enter") {
+      const updatingTask = todoList.map((todo) => {
+        if (todo.id === id) {
+          return { ...todo, editable: false };
+        }
+
+        return todo;
+      });
+      setTodoList(updatingTask);
+      localStorage.todoList = JSON.stringify(updatingTask);
     }
   };
 
@@ -122,8 +181,11 @@ const TodoApp = () => {
           <TodoItem
             key={todo.id}
             todo={todo}
-            completeTaskHandler={completeTask}
-            deleteTaskHandler={deleteTask}
+            makeTaskEditable={makeTaskEditable}
+            editTask={editTask}
+            updateTask={updateTask}
+            completeTask={completeTask}
+            deleteTask={deleteTask}
           />
         ))
       ) : (
