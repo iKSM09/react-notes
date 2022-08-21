@@ -3,6 +3,7 @@ import { useState, useEffect, createContext, useContext } from "react";
 export const TodoContext = createContext();
 
 const TodoProvider = ({ children }) => {
+  const [inputValue, setInputValue] = useState();
   const [todoList, setTodoList] = useState([
     { id: "001", task: "Add Task", completed: false, editable: false },
     {
@@ -16,24 +17,30 @@ const TodoProvider = ({ children }) => {
   ]);
 
   useEffect(() => {
-    // if (localStorage.getItem("todoList") == null) {
     const localTodoList = JSON.parse(localStorage.getItem("todoList"));
     setTodoList(localTodoList);
-    // }
   }, []);
 
   const addNewTask = (e) => {
-    console.log(alert(e.key));
-    if (e.key === "Enter" || e.key === "Return") {
+    let newTodoItem = (newTask) => {
       const newTodo = {
         id: new Date().getTime().toString(),
-        task: e.target.value,
+        task: newTask,
         completed: false,
         editable: false,
       };
+
+      e.key = "Enter" ? (e.target.value = "") : null;
       setTodoList([...todoList, newTodo]);
       localStorage.setItem("todoList", JSON.stringify([...todoList, newTodo]));
-      e.target.value = "";
+    };
+
+    if (e.key === "Enter") {
+      newTodoItem(e.target.value);
+    }
+
+    if (e.type === "click") {
+      newTodoItem(inputValue);
     }
   };
 
@@ -93,6 +100,7 @@ const TodoProvider = ({ children }) => {
 
   const value = {
     todoList,
+    setInputValue,
     addNewTask,
     makeTaskEditable,
     editTask,

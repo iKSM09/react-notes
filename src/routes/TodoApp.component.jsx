@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   MdAddBox,
   MdAddCircleOutline,
@@ -26,12 +26,27 @@ const TaskInput = styled.input.attrs({ type: "text" })`
 `;
 
 const TaskInputContainer = () => {
-  const { addNewTask } = useTodoContext();
+  const { setInputValue, addNewTask } = useTodoContext();
+  const inputRef = useRef();
+
+  const addNewTaskOnClick = (e) => {
+    addNewTask(e);
+    inputRef.current.value = "";
+  };
 
   return (
     <InputContainer>
-      <MdAddBox style={{ fontSize: "22px", margin: "4px" }} />
-      <TaskInput placeholder="Add a Task" onKeyDown={addNewTask} tabIndex={0} />
+      <MdAddBox
+        onClick={(e) => addNewTaskOnClick(e)}
+        style={{ fontSize: "22px", margin: "4px" }}
+      />
+      <TaskInput
+        placeholder="Add a Task"
+        ref={inputRef}
+        onKeyDown={addNewTask}
+        onChange={(e) => setInputValue(e.target.value)}
+        tabIndex={0}
+      />
     </InputContainer>
   );
 };
