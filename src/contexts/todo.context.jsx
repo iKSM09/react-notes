@@ -3,22 +3,27 @@ import { useState, useEffect, createContext, useContext } from "react";
 export const TodoContext = createContext();
 
 const TodoProvider = ({ children }) => {
-  const [inputValue, setInputValue] = useState();
-  const [todoList, setTodoList] = useState([
-    { id: "001", task: "Add Task", completed: false, editable: false },
-    {
-      id: "002",
-      task: "Edit task by clickin on it",
-      completed: false,
-      editable: false,
-    },
-    { id: "003", task: "Complete Task", completed: true, editable: false },
-    { id: "004", task: "Delete Task 👉", completed: false, editable: false },
-  ]);
+  const [inputValue, setInputValue] = useState("");
+  const [todoList, setTodoList] = useState([]);
 
   useEffect(() => {
     const localTodoList = JSON.parse(localStorage.getItem("todoList"));
-    setTodoList(localTodoList);
+
+    const initialTodoListState = [
+      { id: "001", task: "Add Task", completed: false, editable: false },
+      {
+        id: "002",
+        task: "Edit task by clickin on it",
+        completed: false,
+        editable: false,
+      },
+      { id: "003", task: "Complete Task", completed: true, editable: false },
+      { id: "004", task: "Delete Task 👉", completed: false, editable: false },
+    ];
+
+    localTodoList.length === 0
+      ? setTodoList(initialTodoListState)
+      : setTodoList(localTodoList);
   }, []);
 
   const addNewTask = (e) => {
@@ -30,13 +35,13 @@ const TodoProvider = ({ children }) => {
         editable: false,
       };
 
-      e.key = "Enter" ? (e.target.value = "") : null;
+      e.type = "keydown" ? (e.target.value = "") : null;
       setTodoList([...todoList, newTodo]);
       localStorage.setItem("todoList", JSON.stringify([...todoList, newTodo]));
     };
 
     if (e.key === "Enter") {
-      newTodoItem(e.target.value);
+      e.target.value && newTodoItem(e.target.value);
     }
 
     if (e.type === "click") {

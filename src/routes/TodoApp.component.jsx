@@ -30,7 +30,7 @@ const TaskInputContainer = () => {
   const inputRef = useRef();
 
   const addNewTaskOnClick = (e) => {
-    addNewTask(e);
+    inputRef.current.value && addNewTask(e);
     inputRef.current.value = "";
   };
 
