@@ -6,7 +6,7 @@ const Navigation = () => {
   return (
     <>
       <div style={{ display: "flex", alignItems: "center" }}>
-        <a href="https://reactjs.org" target="_blank">
+        <a href="/" target="_blank">
           <img
             src={reactLogo}
             className="logo react logo-spin"

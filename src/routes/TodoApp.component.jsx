@@ -80,7 +80,7 @@ const EditableInput = styled.input.attrs({ type: "text" })`
 `;
 
 const TodoItem = ({ todo }) => {
-  const { id, task, completed, editable } = todo;
+  const { id, task, details, completed, editable } = todo;
   const { makeTaskEditable, editTask, updateTask, completeTask, deleteTask } =
     useTodoContext();
 
@@ -113,12 +113,38 @@ const TodoItem = ({ todo }) => {
   );
 };
 
+const ListNameInput = styled.input.attrs({ type: "text" })`
+  border: none;
+  border-bottom: 2px solid gray;
+  outline: none;
+  background: transparent;
+  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  text-align: center;
+`;
+
 const TodoApp = () => {
-  const { todoList } = useTodoContext();
+  const [toggleListName, setToggleListName] = useState(false);
+  const { listName, setListName, todoList } = useTodoContext();
+
+  const changeListName = (e) => {
+    if (e.key === "Enter") {
+      setListName(e.target.value);
+      setToggleListName(false);
+      localStorage.setItem("listName", JSON.stringify(e.target.value));
+    }
+  };
 
   return (
     <div>
-      <h2>My Tasks</h2>
+      <span>
+        {toggleListName ? (
+          <ListNameInput onKeyDown={(e) => changeListName(e)} type="text" />
+        ) : (
+          <h2 onClick={() => setToggleListName(true)}>{listName}</h2>
+        )}
+      </span>
       {todoList && todoList.length > 0 ? (
         todoList.map((todo) => <TodoItem key={todo.id} todo={todo} />)
       ) : (

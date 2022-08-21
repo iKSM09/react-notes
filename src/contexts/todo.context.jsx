@@ -3,25 +3,49 @@ import { useState, useEffect, createContext, useContext } from "react";
 export const TodoContext = createContext();
 
 const TodoProvider = ({ children }) => {
+  const [listName, setListName] = useState("My Tasks");
   const [inputValue, setInputValue] = useState("");
   const [todoList, setTodoList] = useState([]);
 
   useEffect(() => {
     const localTodoList = JSON.parse(localStorage.getItem("todoList"));
+    const localListName = JSON.parse(localStorage.getItem("listName"));
 
     const initialTodoListState = [
-      { id: "001", task: "Add Task", completed: false, editable: false },
       {
-        id: "002",
-        task: "Edit task by clickin on it",
+        id: "001",
+        task: "Add Task",
+        details:
+          "lorem ipsum dolor sit amet,sdfhsdjfhskdjfhjksdfhd sdfuisdf dfnjkas fnaskfnjkaf asfn ajfgjkasd fnbjsdbvksjdgbvu",
         completed: false,
         editable: false,
       },
-      { id: "003", task: "Complete Task", completed: true, editable: false },
-      { id: "004", task: "Delete Task 👉", completed: false, editable: false },
+      {
+        id: "002",
+        task: "Edit task by clickin on it",
+        details: "",
+        completed: false,
+        editable: false,
+      },
+      {
+        id: "003",
+        task: "Complete Task",
+        details: "",
+        completed: true,
+        editable: false,
+      },
+      {
+        id: "004",
+        task: "Delete Task 👉",
+        details: "",
+        completed: false,
+        editable: false,
+      },
     ];
 
-    localTodoList.length === 0
+    setListName(localListName);
+
+    localTodoList && localTodoList.length === 0
       ? setTodoList(initialTodoListState)
       : setTodoList(localTodoList);
   }, []);
@@ -104,6 +128,8 @@ const TodoProvider = ({ children }) => {
   };
 
   const value = {
+    listName,
+    setListName,
     todoList,
     setInputValue,
     addNewTask,
