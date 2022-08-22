@@ -9,7 +9,7 @@ const TodoProvider = ({ children }) => {
 
   useEffect(() => {
     const existingTodoList = () => {
-      const existing = JSON.parse(localStorage.getItem("todoList"));
+      let existing = JSON.parse(localStorage.getItem("todoList"));
       if (existing === null || existing === undefined) existing = [];
       localStorage.todoList = JSON.stringify(existing);
     };
