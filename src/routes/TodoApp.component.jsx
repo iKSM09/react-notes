@@ -26,18 +26,18 @@ const TaskInput = styled.input.attrs({ type: "text" })`
 `;
 
 const TaskInputContainer = () => {
-  const [tabIndex, setTabIndex] = useState(false);
+  // const [tabIndex, setTabIndex] = useState(false);
   const { setInputValue, inputDisabled, addNewTask } = useTodoContext();
   const inputRef = useRef();
 
-  const addNewTaskOnEnter = (e) => {
-    addNewTask(e);
-    setTabIndex(false);
-  };
+  // const addNewTaskOnEnter = (e) => {
+  //   addNewTask(e);
+  //   setTabIndex(false);
+  // };
 
   const addNewTaskOnClick = (e) => {
     inputRef.current.value && addNewTask(e);
-    setTabIndex(false);
+    // setTabIndex(false);
     inputRef.current.value = "";
   };
 
@@ -54,9 +54,9 @@ const TaskInputContainer = () => {
       <TaskInput
         placeholder="Add a Task"
         ref={inputRef}
-        onKeyDown={(e) => addNewTaskOnEnter(e)}
-        onChange={(e) => setInputValue(e.target.value) + setTabIndex(true)}
-        tabIndex={tabIndex ? 0 : null}
+        onKeyDown={addNewTask}
+        onChange={(e) => setInputValue(e.target.value)}
+        tabIndex={0}
         disabled={inputDisabled}
       />
     </InputContainer>
