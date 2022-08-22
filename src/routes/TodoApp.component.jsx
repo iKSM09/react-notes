@@ -26,12 +26,23 @@ const TaskInput = styled.input.attrs({ type: "text" })`
 `;
 
 const TaskInputContainer = () => {
-  const { setInputValue, addNewTask } = useTodoContext();
+  const [tabIndex, setTabIndex] = useState(false);
+  const { setInputValue, todoList, addNewTask } = useTodoContext();
   const inputRef = useRef();
+
+  const addNewTaskOnEnter = (e) => {
+    addNewTask(e);
+    setTabIndex(false);
+  };
 
   const addNewTaskOnClick = (e) => {
     inputRef.current.value && addNewTask(e);
+    setTabIndex(false);
     inputRef.current.value = "";
+  };
+
+  const inputValueOnChange = (e) => {
+    setInputValue(e.target.value);
   };
 
   return (
@@ -43,9 +54,9 @@ const TaskInputContainer = () => {
       <TaskInput
         placeholder="Add a Task"
         ref={inputRef}
-        onKeyDown={addNewTask}
-        onChange={(e) => setInputValue(e.target.value)}
-        tabIndex={0}
+        onKeyDown={(e) => addNewTaskOnEnter(e)}
+        onChange={(e) => setInputValue(e.target.value) + setTabIndex(true)}
+        tabIndex={tabIndex ? 0 : null}
       />
     </InputContainer>
   );
@@ -80,9 +91,15 @@ const EditableInput = styled.input.attrs({ type: "text" })`
 `;
 
 const TodoItem = ({ todo }) => {
+  const [tabIndex, setTabIndex] = useState(false);
   const { id, task, details, completed, editable } = todo;
   const { makeTaskEditable, editTask, updateTask, completeTask, deleteTask } =
     useTodoContext();
+
+  const updatetaskOnEnter = (e, id) => {
+    updateTask(e, id);
+    setTabIndex(false);
+  };
 
   return (
     <TodoContainer>
@@ -99,8 +116,9 @@ const TodoItem = ({ todo }) => {
         {editable ? (
           <EditableInput
             value={task}
-            onChange={(e) => editTask(e, id)}
-            onKeyDown={(e) => updateTask(e, id)}
+            onChange={(e) => editTask(e, id) + setTabIndex(true)}
+            onKeyDown={(e) => updatetaskOnEnter(e, id)}
+            tabIndex={tabIndex ? 0 : null}
           />
         ) : (
           <Task completed={completed} onClick={() => makeTaskEditable(id)}>

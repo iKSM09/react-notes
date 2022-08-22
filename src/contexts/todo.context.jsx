@@ -19,9 +19,6 @@ const TodoProvider = ({ children }) => {
     const localTodoList = JSON.parse(localStorage.getItem("todoList"));
     const localListName = JSON.parse(localStorage.getItem("listName"));
 
-    console.log(localTodoList);
-    console.log("length", localTodoList.length);
-
     const initialTodoListState = [
       {
         id: "001",
