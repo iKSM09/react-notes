@@ -61,11 +61,19 @@ const TodoProvider = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    setFilteredTodos(todoList);
+    const uncompletedTodos = todoList.filter(
+      (todo) => todo.completed === false
+    );
+    setFilteredTodos(uncompletedTodos);
   }, [todoList]);
 
   const filterTodoList = (value) => {
-    if (value === "all") setFilteredTodos(todoList);
+    if (value === "all") {
+      const uncompletedTodos = todoList.filter(
+        (todo) => todo.completed === false
+      );
+      setFilteredTodos(uncompletedTodos);
+    }
 
     if (value === "completed") {
       const completedTodos = todoList.filter((todo) => todo.completed === true);

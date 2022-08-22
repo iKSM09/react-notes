@@ -153,7 +153,7 @@ const TodoItem = ({ todo }) => {
               value={details}
               onChange={(e) => editDetails(e, id) + setTabIndex(true)}
               onKeyDown={(e) => updatetaskOnEnter(e, id)}
-              tabIndex={tabIndex ? 1 : null}
+              tabIndex={tabIndex ? 0 : null}
             />
           </TaskArea>
         ) : (
