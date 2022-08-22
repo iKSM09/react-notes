@@ -8,8 +8,19 @@ const TodoProvider = ({ children }) => {
   const [todoList, setTodoList] = useState([]);
 
   useEffect(() => {
+    const existingTodoList = () => {
+      const existing = JSON.parse(localStorage.getItem("todoList"));
+      if (existing === null || existing === undefined) existing = [];
+      localStorage.todoList = JSON.stringify(existing);
+    };
+
+    existingTodoList();
+
     const localTodoList = JSON.parse(localStorage.getItem("todoList"));
     const localListName = JSON.parse(localStorage.getItem("listName"));
+
+    console.log(localTodoList);
+    console.log("length", localTodoList.length);
 
     const initialTodoListState = [
       {
@@ -59,9 +70,11 @@ const TodoProvider = ({ children }) => {
         editable: false,
       };
 
-      e.type = "keydown" ? (e.target.value = "") : null;
-      setTodoList([...todoList, newTodo]);
-      localStorage.setItem("todoList", JSON.stringify([...todoList, newTodo]));
+      const newState = [...todoList, newTodo];
+
+      e.type = "keydown" ? (e.target.value = "") : "";
+      setTodoList(newState);
+      localStorage.todoList = JSON.stringify(newState);
     };
 
     if (e.key === "Enter") {
