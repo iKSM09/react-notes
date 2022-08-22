@@ -27,7 +27,7 @@ const TaskInput = styled.input.attrs({ type: "text" })`
 
 const TaskInputContainer = () => {
   const [tabIndex, setTabIndex] = useState(false);
-  const { setInputValue, todoList, addNewTask } = useTodoContext();
+  const { setInputValue, inputDisabled, addNewTask } = useTodoContext();
   const inputRef = useRef();
 
   const addNewTaskOnEnter = (e) => {
@@ -57,6 +57,7 @@ const TaskInputContainer = () => {
         onKeyDown={(e) => addNewTaskOnEnter(e)}
         onChange={(e) => setInputValue(e.target.value) + setTabIndex(true)}
         tabIndex={tabIndex ? 0 : null}
+        disabled={inputDisabled}
       />
     </InputContainer>
   );

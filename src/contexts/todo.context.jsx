@@ -5,6 +5,7 @@ export const TodoContext = createContext();
 const TodoProvider = ({ children }) => {
   const [listName, setListName] = useState("My Tasks");
   const [inputValue, setInputValue] = useState("");
+  const [inputDisabled, setInputDisabled] = useState(false);
   const [todoList, setTodoList] = useState([]);
 
   useEffect(() => {
@@ -84,6 +85,7 @@ const TodoProvider = ({ children }) => {
   };
 
   const makeTaskEditable = (id) => {
+    setInputDisabled(true);
     const editableTask = todoList.map((todo) => {
       if (todo.id === id) {
         return { ...todo, editable: true };
@@ -117,6 +119,7 @@ const TodoProvider = ({ children }) => {
       });
       setTodoList(updatingTask);
       localStorage.todoList = JSON.stringify(updatingTask);
+      setInputDisabled(false);
     }
   };
 
@@ -140,8 +143,9 @@ const TodoProvider = ({ children }) => {
   const value = {
     listName,
     setListName,
-    todoList,
     setInputValue,
+    inputDisabled,
+    todoList,
     addNewTask,
     makeTaskEditable,
     editTask,
