@@ -26,18 +26,11 @@ const TaskInput = styled.input.attrs({ type: "text" })`
 `;
 
 const TaskInputContainer = () => {
-  // const [tabIndex, setTabIndex] = useState(false);
   const { setInputValue, inputDisabled, addNewTask } = useTodoContext();
   const inputRef = useRef();
 
-  // const addNewTaskOnEnter = (e) => {
-  //   addNewTask(e);
-  //   setTabIndex(false);
-  // };
-
   const addNewTaskOnClick = (e) => {
     inputRef.current.value && addNewTask(e);
-    // setTabIndex(false);
     inputRef.current.value = "";
   };
 
@@ -66,24 +59,51 @@ const TaskInputContainer = () => {
 const TodoContainer = styled.section`
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   margin-block: 4px;
 `;
 
 const TaskWrapper = styled.div`
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   margin-block: 4px;
+`;
+
+const TaskArea = styled.div`
+  width: 240px;
+  text-align: left;
 `;
 
 const Task = styled.p`
   margin: 0;
+  width: 240px;
+  height: 30px;
   font-size: 16px;
+  text-align: left;
   text-decoration: ${({ completed }) => (completed ? "line-through" : "none")};
+  color: ${({ completed }) => (completed ? "gray" : "white")};
 `;
 
-const EditableInput = styled.input.attrs({ type: "text" })`
-  width: auto;
+const TaskDetails = styled.p`
+  margin: 0;
+  font-size: 14px;
+  text-decoration: ${({ completed }) => (completed ? "line-through" : "none")};
+  color: ${({ completed }) => (completed ? "gray" : "lightgray")};
+`;
+
+const EditableTaskInput = styled.input.attrs({ type: "text" })`
+  width: 240px;
+  border: none;
+  outline: none;
+  background: transparent;
+  border-bottom: 1px solid gray;
+  font-size: 16px;
+`;
+
+const EditableDetailsInput = styled.textarea.attrs({ cols: 40 })`
+  width: 240px;
+  height: 80px;
+  margin-top: 8px;
   border: none;
   outline: none;
   background: transparent;
@@ -94,8 +114,14 @@ const EditableInput = styled.input.attrs({ type: "text" })`
 const TodoItem = ({ todo }) => {
   const [tabIndex, setTabIndex] = useState(false);
   const { id, task, details, completed, editable } = todo;
-  const { makeTaskEditable, editTask, updateTask, completeTask, deleteTask } =
-    useTodoContext();
+  const {
+    makeTaskEditable,
+    editTask,
+    editDetails,
+    updateTask,
+    completeTask,
+    deleteTask,
+  } = useTodoContext();
 
   const updatetaskOnEnter = (e, id) => {
     updateTask(e, id);
@@ -115,16 +141,30 @@ const TodoItem = ({ todo }) => {
           )}
         </span>
         {editable ? (
-          <EditableInput
-            value={task}
-            onChange={(e) => editTask(e, id) + setTabIndex(true)}
-            onKeyDown={(e) => updatetaskOnEnter(e, id)}
-            tabIndex={tabIndex ? 0 : null}
-          />
+          <TaskArea>
+            <EditableTaskInput
+              value={task}
+              onChange={(e) => editTask(e, id) + setTabIndex(true)}
+              onKeyDown={(e) => updatetaskOnEnter(e, id)}
+              tabIndex={tabIndex ? 0 : null}
+            />
+            <EditableDetailsInput
+              placeholder="add Task details"
+              value={details}
+              onChange={(e) => editDetails(e, id) + setTabIndex(true)}
+              onKeyDown={(e) => updatetaskOnEnter(e, id)}
+              tabIndex={tabIndex ? 1 : null}
+            />
+          </TaskArea>
         ) : (
-          <Task completed={completed} onClick={() => makeTaskEditable(id)}>
-            {task}
-          </Task>
+          <TaskArea>
+            <Task completed={completed} onClick={() => makeTaskEditable(id)}>
+              {task}
+            </Task>
+            {details && details !== "" ? (
+              <TaskDetails completed={completed}>{details}</TaskDetails>
+            ) : null}
+          </TaskArea>
         )}
       </TaskWrapper>
       <MdDelete onClick={() => deleteTask(id)} />
@@ -144,8 +184,9 @@ const ListNameInput = styled.input.attrs({ type: "text" })`
 `;
 
 const TodoApp = () => {
+  const { listName, setListName, filteredTodos, filterTodoList } =
+    useTodoContext();
   const [toggleListName, setToggleListName] = useState(false);
-  const { listName, setListName, todoList } = useTodoContext();
 
   const changeListName = (e) => {
     if (e.key === "Enter") {
@@ -164,11 +205,22 @@ const TodoApp = () => {
           <h2 onClick={() => setToggleListName(true)}>{listName}</h2>
         )}
       </span>
-      {todoList && todoList.length > 0 ? (
-        todoList.map((todo) => <TodoItem key={todo.id} todo={todo} />)
+      <span
+        style={{
+          marginBlock: "40px",
+          display: "flex",
+          justifyContent: "space-around",
+        }}
+      >
+        <button onClick={() => filterTodoList("all")}>All</button>
+        <button onClick={() => filterTodoList("completed")}>Completed</button>
+      </span>
+      {filteredTodos && filteredTodos.length > 0 ? (
+        filteredTodos.map((todo) => <TodoItem key={todo.id} todo={todo} />)
       ) : (
         <p>No tasks yet</p>
       )}
+
       <TaskInputContainer />
     </div>
   );

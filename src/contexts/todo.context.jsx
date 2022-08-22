@@ -7,6 +7,8 @@ const TodoProvider = ({ children }) => {
   const [inputValue, setInputValue] = useState("");
   const [inputDisabled, setInputDisabled] = useState(false);
   const [todoList, setTodoList] = useState([]);
+  const [filteredTodos, setFilteredTodos] = useState(todoList);
+  let indexCount = 0;
 
   useEffect(() => {
     const existingTodoList = () => {
@@ -24,8 +26,7 @@ const TodoProvider = ({ children }) => {
       {
         id: "001",
         task: "Add Task",
-        details:
-          "lorem ipsum dolor sit amet,sdfhsdjfhskdjfhjksdfhd sdfuisdf dfnjkas fnaskfnjkaf asfn ajfgjkasd fnbjsdbvksjdgbvu",
+        details: "",
         completed: false,
         editable: false,
       },
@@ -52,23 +53,37 @@ const TodoProvider = ({ children }) => {
       },
     ];
 
-    setListName(localListName);
+    setListName(localListName === "" ? "My Tasks" : localListName);
 
     localTodoList && localTodoList.length === 0
       ? setTodoList(initialTodoListState)
       : setTodoList(localTodoList);
   }, []);
 
+  useEffect(() => {
+    setFilteredTodos(todoList);
+  }, [todoList]);
+
+  const filterTodoList = (value) => {
+    if (value === "all") setFilteredTodos(todoList);
+
+    if (value === "completed") {
+      const completedTodos = todoList.filter((todo) => todo.completed === true);
+      setFilteredTodos(completedTodos);
+    }
+  };
+
   const addNewTask = (e) => {
     let newTodoItem = (newTask) => {
       const newTodo = {
+        index: indexCount + 1,
         id: new Date().getTime().toString(),
         task: newTask,
         completed: false,
         editable: false,
       };
 
-      const newState = [...todoList, newTodo];
+      const newState = [...filteredTodos, newTodo];
 
       e.type = "keydown" ? (e.target.value = "") : "";
       setTodoList(newState);
@@ -86,37 +101,34 @@ const TodoProvider = ({ children }) => {
 
   const makeTaskEditable = (id) => {
     setInputDisabled(true);
-    const editableTask = todoList.map((todo) => {
-      if (todo.id === id) {
-        return { ...todo, editable: true };
-      }
-      return todo;
-    });
+    const editableTask = todoList.map((todo) =>
+      todo.id === id ? { ...todo, editable: true } : todo
+    );
 
     setTodoList(editableTask);
   };
 
   const editTask = (e, id) => {
-    let editingTask = todoList.map((todo) => {
-      if (todo.id === id) {
-        return { ...todo, task: e.target.value };
-      }
-
-      return todo;
-    });
+    let editingTask = todoList.map((todo) =>
+      todo.id === id ? { ...todo, task: e.target.value } : todo
+    );
 
     setTodoList(editingTask);
   };
 
+  const editDetails = (e, id) => {
+    let editingDetail = todoList.map((todo) =>
+      todo.id === id ? { ...todo, details: e.target.value } : todo
+    );
+
+    setTodoList(editingDetail);
+  };
+
   const updateTask = (e, id) => {
     if (e.key === "Enter") {
-      const updatingTask = todoList.map((todo) => {
-        if (todo.id === id) {
-          return { ...todo, editable: false };
-        }
-
-        return todo;
-      });
+      const updatingTask = todoList.map((todo) =>
+        todo.id === id ? { ...todo, editable: false } : todo
+      );
       setTodoList(updatingTask);
       localStorage.todoList = JSON.stringify(updatingTask);
       setInputDisabled(false);
@@ -124,12 +136,9 @@ const TodoProvider = ({ children }) => {
   };
 
   const completeTask = (id) => {
-    const completedTodo = todoList.map((todo) => {
-      if (todo.id === id) {
-        return { ...todo, completed: !todo.completed };
-      }
-      return todo;
-    });
+    const completedTodo = todoList.map((todo) =>
+      todo.id === id ? { ...todo, completed: !todo.completed } : todo
+    );
     setTodoList(completedTodo);
     localStorage.todoList = JSON.stringify(completedTodo);
   };
@@ -146,9 +155,12 @@ const TodoProvider = ({ children }) => {
     setInputValue,
     inputDisabled,
     todoList,
+    filteredTodos,
+    filterTodoList,
     addNewTask,
     makeTaskEditable,
     editTask,
+    editDetails,
     updateTask,
     completeTask,
     deleteTask,
