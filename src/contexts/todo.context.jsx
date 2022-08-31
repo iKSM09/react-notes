@@ -3,7 +3,6 @@ import { useState, useEffect, createContext, useContext } from "react";
 export const TodoContext = createContext();
 
 const TodoProvider = ({ children }) => {
-  const [listName, setListName] = useState("My Tasks");
   const [inputValue, setInputValue] = useState("");
   const [inputDisabled, setInputDisabled] = useState(false);
   const [todoList, setTodoList] = useState([]);
@@ -20,7 +19,6 @@ const TodoProvider = ({ children }) => {
     existingTodoList();
 
     const localTodoList = JSON.parse(localStorage.getItem("todoList"));
-    const localListName = JSON.parse(localStorage.getItem("listName"));
 
     const initialTodoListState = [
       {
@@ -29,6 +27,22 @@ const TodoProvider = ({ children }) => {
         details: "",
         completed: false,
         editable: false,
+        subTask: [
+          {
+            id: "001.01",
+            task: "Add Sub-Task001",
+            details: "",
+            completed: false,
+            editable: false,
+          },
+          {
+            id: "001.02",
+            task: "Add Sub-Task002",
+            details: "",
+            completed: false,
+            editable: false,
+          },
+        ],
       },
       {
         id: "002",
@@ -36,6 +50,7 @@ const TodoProvider = ({ children }) => {
         details: "",
         completed: false,
         editable: false,
+        subTask: [],
       },
       {
         id: "003",
@@ -43,6 +58,7 @@ const TodoProvider = ({ children }) => {
         details: "",
         completed: true,
         editable: false,
+        subTask: [],
       },
       {
         id: "004",
@@ -50,10 +66,9 @@ const TodoProvider = ({ children }) => {
         details: "",
         completed: false,
         editable: false,
+        subTask: [],
       },
     ];
-
-    setListName(localListName === "" ? "My Tasks" : localListName);
 
     localTodoList && localTodoList.length === 0
       ? setTodoList(initialTodoListState)
@@ -158,8 +173,6 @@ const TodoProvider = ({ children }) => {
   };
 
   const value = {
-    listName,
-    setListName,
     setInputValue,
     inputDisabled,
     todoList,
