@@ -20,13 +20,17 @@ const TextArea = styled.textarea`
   resize: none;
 `;
 
-const NotesList = ({ notes }) => {
+const NotesList = ({ notes, handleAddNote, handleDeletingNote }) => {
   return (
     <NotesContainer>
       {notes.map((note) => (
-        <Note note={note} key={note.id} />
+        <Note
+          note={note}
+          key={note.id}
+          handleDeletingNote={handleDeletingNote}
+        />
       ))}
-      <AddNote />
+      <AddNote handleAddNote={handleAddNote} />
     </NotesContainer>
   );
 };
@@ -39,6 +43,7 @@ const NoteContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  white-space: pre-wrap;
 
   .note-footer {
     display: flex;
@@ -47,18 +52,37 @@ const NoteContainer = styled.div`
   }
 `;
 
-export const AddNote = () => {
+export const AddNote = ({ handleAddNote }) => {
+  const [noteText, setNoteText] = useState("");
+  const CHAR_LIMIT = 200;
+
+  const handleChange = (e) => {
+    if (CHAR_LIMIT - e.target.value.length >= 0) {
+      setNoteText(e.target.value);
+    }
+  };
+
+  const handleSaveNote = () => {
+    if (noteText.trim().length > 0) {
+      handleAddNote(noteText);
+      setNoteText("");
+    }
+  };
+
   return (
     <AddNoteContainer>
       <textarea
-        id=""
         cols="10"
         rows="8"
         placeholder="Type to add a note..."
+        value={noteText}
+        onChange={handleChange}
       ></textarea>
       <div className="note-footer">
-        <small>200 Remaining</small>
-        <button className="save">Save</button>
+        <small>{CHAR_LIMIT - noteText.length} Remaining</small>
+        <button className="save" onClick={handleSaveNote}>
+          Save
+        </button>
       </div>
     </AddNoteContainer>
   );
@@ -104,20 +128,23 @@ const AddNoteContainer = styled.div`
   }
 `;
 
-const Note = ({ note }) => {
+const DeleteIcon = styled(MdDelete).attrs({ size: "1.3em" })`
+  cursor: pointer;
+`;
+
+const Note = ({ note, handleDeletingNote }) => {
   return (
     <NoteContainer>
-      <span>{note.text}</span>
+      <div>{note.text}</div>
       <div className="note-footer">
         <small>{note.date}</small>
-        <MdDelete className="delete-icon" size="1.3em" />
+        <DeleteIcon onClick={() => handleDeletingNote(note.id)} />
       </div>
     </NoteContainer>
   );
 };
 
 const NotesApp = () => {
-  const [noteText, setNoteText] = useState("");
   const [notes, setNotes] = useState([
     {
       id: "001",
@@ -141,6 +168,21 @@ const NotesApp = () => {
     },
   ]);
 
+  const addNote = (text) => {
+    const newNote = {
+      id: new Date().getTime.toString(),
+      text: text,
+      date: new Date().toLocaleDateString(),
+    };
+
+    setNotes([...notes, newNote]);
+  };
+
+  const deleteNote = (id) => {
+    const updatedNotesList = notes.filter((note) => note.id !== id);
+    setNotes(updatedNotesList);
+  };
+
   const saveNote = (id) => {
     const updatedNote = notes.map((note) =>
       note.id === id ? { ...note, body: noteText } : note
@@ -152,7 +194,11 @@ const NotesApp = () => {
   return (
     <div>
       <div>
-        <NotesList notes={notes} />
+        <NotesList
+          notes={notes}
+          handleAddNote={addNote}
+          handleDeletingNote={deleteNote}
+        />
       </div>
     </div>
   );
