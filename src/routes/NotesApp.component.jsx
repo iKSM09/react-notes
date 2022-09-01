@@ -1,6 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { MdDelete } from "react-icons/md";
+
+import SearchBar from "../components/SearchBar/SearchBar.component";
 
 const Container = styled.div`
   max-width: 960px;
@@ -168,6 +170,8 @@ const NotesApp = () => {
     },
   ]);
 
+  const [searchText, setSearchText] = useState("");
+
   const addNote = (text) => {
     const newNote = {
       id: new Date().getTime.toString(),
@@ -193,9 +197,12 @@ const NotesApp = () => {
 
   return (
     <div>
+      <SearchBar handleSearchNote={setSearchText} />
       <div>
         <NotesList
-          notes={notes}
+          notes={notes.filter((note) =>
+            note.text.toLocaleLowerCase().includes(searchText)
+          )}
           handleAddNote={addNote}
           handleDeletingNote={deleteNote}
         />
