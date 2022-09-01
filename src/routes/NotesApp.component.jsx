@@ -172,6 +172,18 @@ const NotesApp = () => {
 
   const [searchText, setSearchText] = useState("");
 
+  useEffect(() => {
+    const savedNotes = JSON.parse(localStorage.getItem("notesList"));
+
+    if (savedNotes) {
+      setNotes(savedNotes);
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("notesList", JSON.stringify(notes));
+  }, [notes]);
+
   const addNote = (text) => {
     const newNote = {
       id: new Date().getTime.toString(),
