@@ -1,21 +1,27 @@
 import { useTodoContext } from "../contexts/todo.context";
-import { ListName, TodoItem, TaskInputContainer } from "../components";
+import { ListName, TodoItem, TaskInput, Button } from "../components";
+import styled from "styled-components";
+
+export const TodoAppContainer = styled.div`
+  padding: 18px;
+`;
 
 const TodoApp = () => {
   const { filteredTodos, filterTodoList } = useTodoContext();
 
   return (
-    <div>
+    <TodoAppContainer>
       <ListName />
       <span
         style={{
-          marginBlock: "40px",
+          marginBlock: "24px",
           display: "flex",
-          justifyContent: "space-around",
+          justifyContent: "center",
+          gap: "40px",
         }}
       >
-        <button onClick={() => filterTodoList("all")}>All</button>
-        <button onClick={() => filterTodoList("completed")}>Completed</button>
+        <Button onClick={() => filterTodoList("all")}>All</Button>
+        <Button onClick={() => filterTodoList("completed")}>Completed</Button>
       </span>
       {filteredTodos && filteredTodos.length > 0 ? (
         filteredTodos.map((todo) => <TodoItem key={todo.id} todo={todo} />)
@@ -23,8 +29,8 @@ const TodoApp = () => {
         <p>No tasks yet</p>
       )}
 
-      <TaskInputContainer />
-    </div>
+      <TaskInput />
+    </TodoAppContainer>
   );
 };
 

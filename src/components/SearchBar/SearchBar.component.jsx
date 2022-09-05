@@ -1,34 +1,18 @@
-import styled from "styled-components";
-import { MdSearch } from "react-icons/md";
+import { useNotesContext } from "../../contexts/notes.context";
 
-const SearchContainer = styled.div`
-  display: flex;
-  align-items: center;
-  background-color: gray;
-  border-radius: 10px;
-  padding: 5px;
-  margin-bottom: 1.5em;
-`;
+import { SearchContainer, SearchIcon, SearchInput } from "./SearchBar.styles";
 
-const SearchIcon = styled(MdSearch).attrs({ size: "1.3em" })``;
+const SearchBar = () => {
+  const { setSearchText } = useNotesContext();
 
-const SearchInput = styled.input.attrs({
-  type: "text",
-  placeholder: "type to search...",
-})`
-  border: none;
-  background-color: transparent;
+  const handleSearchNote = (e) => {
+    setSearchText(e.target.value);
+  };
 
-  &:focus {
-    outline: none;
-  }
-`;
-
-const SearchBar = ({ handleSearchNote }) => {
   return (
     <SearchContainer>
       <SearchIcon />
-      <SearchInput onChange={(e) => handleSearchNote(e.target.value)} />
+      <SearchInput onChange={(e) => handleSearchNote(e)} />
     </SearchContainer>
   );
 };

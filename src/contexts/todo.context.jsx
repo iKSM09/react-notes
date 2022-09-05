@@ -3,9 +3,9 @@ import { useState, useEffect, createContext, useContext } from "react";
 export const TodoContext = createContext();
 
 const TodoProvider = ({ children }) => {
+  const [todoList, setTodoList] = useState([]);
   const [inputValue, setInputValue] = useState("");
   const [inputDisabled, setInputDisabled] = useState(false);
-  const [todoList, setTodoList] = useState([]);
   const [filteredTodos, setFilteredTodos] = useState(todoList);
   let indexCount = 0;
 

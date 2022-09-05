@@ -1,18 +1,25 @@
-:root {
+import { createGlobalStyle } from "styled-components";
+import ReseterCSS from "./ReseterCSS";
+
+export const GlobalStyles = createGlobalStyle`
+${ReseterCSS}
+`;
+
+/* :root {
   font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
   font-size: 16px;
   line-height: 24px;
   font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
 }
 
 a {
@@ -26,8 +33,6 @@ a:hover {
 
 body {
   margin: 0;
-  display: flex;
-  /* place-items: center; */
   min-width: 320px;
   min-height: 100vh;
 }
@@ -71,4 +76,4 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
-}
+} */
