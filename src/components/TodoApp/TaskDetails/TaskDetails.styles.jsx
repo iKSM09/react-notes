@@ -30,6 +30,6 @@ export const EditableDetailsInput = styled.textarea.attrs({ cols: 40 })`
   font-size: 14px;
 
   &::placeholder {
-    color: ${({ theme }) => theme.onPrimary};
+    color: ${({ theme }) => theme.primary};
   }
 `;
