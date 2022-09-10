@@ -7,7 +7,7 @@ const NotesList = ({ notes }) => {
     <NotesContainer>
       <AddNote />
       {notes.map((note) => (
-        <Note key={note.id} note={note} />
+        <Note key={note.id} {...{ note }} />
       ))}
     </NotesContainer>
   );

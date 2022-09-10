@@ -1,12 +1,16 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { useNotesContext } from "../../../contexts/notes.context";
 import { AddNoteContainer } from "./AddNote.styles";
 
-export const AddNote = () => {
+export const AddNote = ({ text, id, setEditable }) => {
   const [noteText, setNoteText] = useState("");
-  const { addNote } = useNotesContext();
+  const { notes, setNotes, addNote } = useNotesContext();
   const CHAR_LIMIT = 200;
+
+  useEffect(() => {
+    text && setNoteText(text);
+  }, [text]);
 
   const handleChange = (e) => {
     if (CHAR_LIMIT - e.target.value.length >= 0) {
@@ -14,10 +18,18 @@ export const AddNote = () => {
     }
   };
 
-  const handleSaveNote = (noteText) => {
-    if (noteText.trim().length > 0) {
-      addNote(noteText);
-      setNoteText("");
+  const handleSaveNote = (noteText, id) => {
+    if (id) {
+      const editedNote = notes.map((note) =>
+        note.id === id ? { ...note, text: noteText } : note
+      );
+      setNotes(editedNote);
+      setEditable(false);
+    } else {
+      if (noteText.trim().length > 0) {
+        addNote(noteText);
+        setNoteText("");
+      }
     }
   };
 
@@ -32,7 +44,7 @@ export const AddNote = () => {
       ></textarea>
       <div className="note-footer">
         <small>{CHAR_LIMIT - noteText.length} Remaining</small>
-        <button className="save" onClick={() => handleSaveNote(noteText)}>
+        <button className="save" onClick={() => handleSaveNote(noteText, id)}>
           Save
         </button>
       </div>

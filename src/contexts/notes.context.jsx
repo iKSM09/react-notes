@@ -25,7 +25,7 @@ const NotesProvider = ({ children }) => {
     localStorage.notesList = JSON.stringify(notes);
   }, [notes]);
 
-  const addNote = (text) => {
+  const addNote = (text, id) => {
     const newNote = {
       id: new Date().getTime().toString(),
       text: text,
@@ -40,6 +40,10 @@ const NotesProvider = ({ children }) => {
     setNotes(updatedNotesList);
   };
 
+  // const editNote = (e) => {
+  //   console.log(e);
+  // };
+
   // const filterNotes = (notes, searchText) => {
   //   notes.filter((note) => note.text.toLocaleLowerCase().includes(searchText));
   // };
@@ -51,6 +55,7 @@ const NotesProvider = ({ children }) => {
     setSearchText,
     addNote,
     deleteNote,
+    // editNote,
     // filterNotes,
   };
 
